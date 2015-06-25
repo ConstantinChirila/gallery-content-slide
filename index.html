@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Test</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	<style type="text/css">
+		.floating {
+			float: left;
+			width: 300px;
+			margin: 1%;
+			height: 100px;
+			background: #ffe4c4;
+		}
+		
+		.Content {
+			display: none;
+			width: 100%;
+			background: green;
+		}
+		
+		#contentOnDisplay {
+			min-height: 100px;
+			width: 100%;
+			float: left;
+			background: green;
+			display: block;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="Content" id="floating1Content">content for 1
+		<p>dsadasd</p>
+		<div style="background:red;">
+			dd
+		</div>
+	</div>
+	<div class="Content" id="floating2Content">content for 2</div>
+	<div class="Content" id="floating3Content">content for 3</div>
+	<div class="Content" id="floating4Content">content for 4</div>
+	<div class="Content" id="floating5Content">content for 5</div>
+	<div class="Content" id="floating6Content">content for 6</div>
+	<div class="Content" id="floating7Content">content for 7</div>
+	<div class="Content" id="floating8Content">content for 8</div>
+	<div class="Content" id="floating9Content">content for 9</div>
+
+	<div class="floating" id="floating1"></div>
+	<div class="floating" id="floating2"></div>
+	<div class="floating" id="floating3"></div>
+	<div class="floating" id="floating4"></div>
+	<div class="floating" id="floating5"></div>
+	<div class="floating" id="floating6"></div>
+	<div class="floating" id="floating7"></div>
+	<div class="floating" id="floating8"></div>
+	<div class="floating" id="floating9"></div>
+
+	<script type="text/javascript">
+		
+		var getLeftPos = $(".floating").position().left; 	//get the left position of the element
+		
+		$(document).ready(function () {
+			$(".floating").click(function () {
+				var elementID = $(this).attr("id"); 	//get the id on the class
+				$("#contentOnDisplay").remove(); 	//hides the existing contents
+				var firstItemOFNextRow = firstItem(elementID);	//
+
+				addContent(firstItemOFNextRow, getFirstIDNextRow(elementID));
+				return false;
+			});
+		});
+		//FIRSTITEM FUNCTION
+		function firstItem(clickedItemID) {
+			var getIDno = parseInt(clickedItemID.replace("floating", ""));
+			var position = $("#" + clickedItemID).position();
+			var insertBeforeID = "";
+
+			for (var i = getIDno + 1; i < $(".floating").length; i++) {
+
+				var leftPosOfItem = $("#floating" + i).position().left;
+
+				if (leftPosOfItem < getLeftPos * 1.5) {
+					insertBeforeID = "#floating" + i;
+					break;
+				}
+			}
+
+			if (insertBeforeID.length == "") {
+
+				insertBeforeID = "#floating" + $(".floating").length;
+			}
+			return insertBeforeID;
+		};
+		
+		//Gets the id of the next row
+		
+		function getFirstIDNextRow(elementID) {
+			return parseInt(elementID.replace("floating", ""));
+		};
+		
+		//Adds the content after or before an element
+		function addContent(idToPrepend, IdNumber) {
+			var content = $("#floating" + IdNumber + "Content").html();
+			content = "<div id='contentOnDisplay'>" + content + "</div>";
+
+			if (IdNumber <= $(".floating").length - getItemsLastRow()) {
+				$(idToPrepend).before(content);
+			} else {
+				$(idToPrepend).after(content);
+			}
+			return false;
+		};
+		
+		//FIRST ITEM FUNCTION
+		//	returns number of columns
+		function getItemsLastRow() {
+			var columnsNo = 0;
+
+			for (var i = $(".floating").length; i > 0; i--) {
+				var leftPosOfItem = $("#floating" + i).position().left;
+				columnsNo++;
+				if (leftPosOfItem < getLeftPos * 1.5) {
+					break;
+				}
+			}
+			return columnsNo;
+		};
+	</script>
+</body>
+
+</html>
